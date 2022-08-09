@@ -4,23 +4,17 @@ import styled from 'styled-components/native';
 import {PlayerLayout, ScreenLayout} from '~layouts';
 import {useStore} from 'effector-react';
 import {FlatList} from 'react-native';
-import {head, last} from 'ramda';
+import {andThen, equals, pipe} from 'ramda';
 import {Song} from '~components';
-import {ROUTES} from 'src/navigation/routes';
 import {$songs} from '~store';
-import {useNavigation} from '~navigation';
 import TrackPlayer from 'react-native-track-player';
 import {DocumentPickerResponse} from 'react-native-document-picker';
-import {parseName} from 'src/utils';
 
 export const MainScreen: React.FC = () => {
   const {filteredSongs, cachedSongs} = useStore($songs);
 
-  const navigation = useNavigation();
-
   const renderSong = ({item}: {item: DocumentPickerResponse}) => (
     <Song
-      uri={''}
       onPress={() => onSongPress(item)}
       label={item.name}
       description={item.name}
@@ -28,14 +22,17 @@ export const MainScreen: React.FC = () => {
   );
 
   const onSongPress = async (song: DocumentPickerResponse) => {
-    await TrackPlayer.add({
-      url: song.uri,
-      duration: 402,
-      title: head(parseName(song.name)),
-      description: last(parseName(song.name)),
-    });
-    await TrackPlayer.play();
-    navigation.navigate(ROUTES.PLAYING);
+    await TrackPlayer.getQueue().then(console.log);
+    await TrackPlayer.stop();
+
+    pipe(
+      TrackPlayer.getQueue,
+      andThen(queue =>
+        queue.findIndex(queueSong => equals(queueSong.url)(song.uri)),
+      ),
+      andThen(TrackPlayer.skip),
+    )();
+    await TrackPlayer.play().catch(console.log);
   };
 
   return (
@@ -45,8 +42,8 @@ export const MainScreen: React.FC = () => {
         <FlatList
           showsHorizontalScrollIndicator={false}
           data={filteredSongs ?? cachedSongs}
-          renderItem={renderSong}
           numColumns={1}
+          CellRendererComponent={renderSong}
         />
       </PlayerLayout>
     </ScreenLayout>

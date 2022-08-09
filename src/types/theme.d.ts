@@ -1,6 +1,6 @@
 import { lightTheme,darkTheme } from "~theme";
 
-export type DefaultThemeType = typeof darkTheme;
+export type DefaultThemeType = typeof darkTheme
 
 export type GlobalThemeType = typeof darkTheme | typeof lightTheme
 

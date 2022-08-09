@@ -1,6 +1,12 @@
-import React, {useCallback} from 'react';
-import TrackPlayer, {useProgress} from 'react-native-track-player';
-import {VolumeIcon, RepeatIcon, ShuffleIcon} from '~icons';
+import React, {useEffect, useState} from 'react';
+import TrackPlayer, {
+  Event,
+  RepeatMode,
+  Track,
+  useProgress,
+  useTrackPlayerEvents,
+} from 'react-native-track-player';
+import {RepeatIcon, ShuffleIcon} from '~icons';
 import {Body1} from '~typography';
 import {normalize} from '~utils';
 import styled, {useTheme} from 'styled-components/native';
@@ -8,32 +14,35 @@ import {Dimensions} from 'react-native';
 import {PlayerNavigation, ProgressBar} from 'src/components';
 import {usePlayer} from 'src/hooks';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {ifElse, equals} from 'ramda';
+import {andThen, equals, pipe, not, ifElse} from 'ramda';
 
 const progressWidth = Dimensions.get('window').width - 55;
 
 export const PlayingControls: React.FC = () => {
-  const {position, duration} = useProgress();
   const theme = useTheme();
+  const [repeatMode, setRepeat] = useState<RepeatMode>(RepeatMode.Off);
+  const {position, duration} = useProgress();
   const {toggleRepeat} = usePlayer();
-  
+
   const fill = ifElse(
     equals(true),
     () => theme.color.secondary,
     () => theme.color.optional_2,
   );
 
-  const toggleRepeatMode = useCallback(() => toggleRepeat(), [toggleRepeat]);
+  const toggleRepeatMode = () => toggleRepeat();
+
+  useEffect(() => {
+    pipe(TrackPlayer.getRepeatMode, andThen(setRepeat))();
+  }, [toggleRepeatMode]);
 
   return (
     <>
       <Panel>
-        <VolumeIcon />
         <Double>
           <TouchableOpacity onPress={toggleRepeatMode}>
-            <RepeatIcon fill={fill(true)} />
+            <RepeatIcon fill={fill(repeatMode === RepeatMode.Track)} />
           </TouchableOpacity>
-          <ShuffleIcon />
         </Double>
       </Panel>
       <Controls>
@@ -41,7 +50,7 @@ export const PlayingControls: React.FC = () => {
           <Time>{normalize(position)}</Time>
           <Time>{normalize(duration)}</Time>
         </Timing>
-        <ProgressBar width={progressWidth} />
+        <ProgressBar width={progressWidth} borderRadius={10} />
         <Navigation>
           <PlayerNavigation />
         </Navigation>
@@ -57,9 +66,10 @@ const Panel = styled.View`
   justify-content: space-between;
 `;
 const Double = styled.View`
-  width: 60px;
+  width: 100%;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-evenly;
+  align-items: center;
 `;
 const Controls = styled.View`
   margin-top: 30%;

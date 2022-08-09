@@ -10,11 +10,10 @@ import {
   types,
   pickMultiple,
 } from 'react-native-document-picker';
-import {$songs, setSongs} from 'src/store';
+import {$songs, pushSongs} from 'src/store';
 import {useStore} from 'effector-react';
 import {includes, not} from 'ramda';
 import {showFailureToast, showSuccessToast} from 'src/toast';
-import {saveStore} from 'src/utils';
 import {ModalFilter} from './modal.filter';
 
 const pickerOptions: DocumentPickerOptions<'ios'> = {
@@ -33,11 +32,7 @@ export const MainHeader: React.FC<DrawerHeaderProps> = ({navigation}) => {
       .then(response =>
         response.filter(song => not(includes(song, songs.cachedSongs))),
       )
-      .then(response => {
-        saveStore(response);
-        return response;
-      })
-      .then(setSongs)
+      .then(pushSongs)
       .then(showSuccessToast)
       .catch(showFailureToast);
 

@@ -1,4 +1,4 @@
-import {defaultTo, ifElse, equals} from 'ramda';
+import {defaultTo, ifElse, equals, not, pipe, andThen} from 'ramda';
 import TrackPlayer, {RepeatMode, Track} from 'react-native-track-player';
 
 export const usePlayer = () => {
@@ -10,6 +10,12 @@ export const usePlayer = () => {
     play: async () => await TrackPlayer.play(),
     pause: async () => await TrackPlayer.pause(),
     stop: async () => await TrackPlayer.stop(),
+    remove: (path: string) =>
+      pipe(
+        TrackPlayer.getQueue,
+        andThen(queue => queue.findIndex(track => equals(track.url)(path))),
+        andThen(TrackPlayer.remove),
+      )(),
     add: async (song: Track) => await TrackPlayer.add(song),
     reset: async () => await TrackPlayer.reset(),
     seekTo: async (time: number) => await TrackPlayer.seekTo(time),

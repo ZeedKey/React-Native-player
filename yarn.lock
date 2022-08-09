@@ -3093,6 +3093,11 @@ effector-react@^22.1.6:
   dependencies:
     use-sync-external-store "^1.0.0"
 
+effector-storage@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/effector-storage/-/effector-storage-5.0.0.tgz#49d2eb1e21983967b9ccb7163b2e4d5a27eb1be4"
+  integrity sha512-zRnwaBzjNXAJBlR3/ovpsND1g+trEKN7szbyuIZ1s3LhL3t/wCzgXOjA/ss6Z+p2ekbPblpiRLcrBtIdpZJhMg==
+
 effector@^22.3.0:
   version "22.3.0"
   resolved "https://registry.yarnpkg.com/effector/-/effector-22.3.0.tgz#c743dd7d934ec3f9a2efac76a563cd0281bc4201"

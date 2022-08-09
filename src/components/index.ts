@@ -1,6 +1,5 @@
 export { ProgressBar } from "./functional/bar";
 export { MicroPlayer } from "./functional/micro-player";
-export { ModalOptions } from "./functional/modal-options";
 export { PlayerNavigation } from "./functional/navigation";
 export { Song } from "./functional/song";
 export { ThemeButton } from "./functional/theme-button";

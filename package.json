@@ -19,6 +19,7 @@
     "babel-plugin-module-resolver": "^4.1.0",
     "effector": "^22.3.0",
     "effector-react": "^22.1.6",
+    "effector-storage": "^5.0.0",
     "monet": "^0.9.3",
     "node-id3": "^0.2.3",
     "ramda": "^0.28.0",

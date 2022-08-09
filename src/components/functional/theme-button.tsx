@@ -10,10 +10,10 @@ export const ThemeButton: React.FC = () => {
   const theme = useTheme();
 
   const Icon = ifElse(
-    equals(lightTheme),
+    equals(true),
     always(SunIcon),
     always(NightIcon),
-  )(theme);
+  )(equals(theme)(lightTheme));
 
   return (
     <DrawerItem

@@ -4,6 +4,7 @@ import {usePlayer} from '~hooks';
 import {PreviousIcon, NextIcon, PauseIcon, PlayIcon} from '~icons';
 import styled from 'styled-components/native';
 import {ifElse, equals} from 'ramda';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export const PlayerNavigation: React.FC = () => {
   const {pause, play, toPrevious, toNext} = usePlayer();
@@ -11,15 +12,27 @@ export const PlayerNavigation: React.FC = () => {
 
   const renderButton = ifElse(
     equals(State.Playing),
-    () => <PauseIcon onPress={pause} />,
-    () => <PlayIcon onPress={play} />,
+    () => (
+      <TouchableOpacity onPress={pause}>
+        <PauseIcon />
+      </TouchableOpacity>
+    ),
+    () => (
+      <TouchableOpacity onPress={play}>
+        <PlayIcon />
+      </TouchableOpacity>
+    ),
   );
 
   return (
     <Navigation>
-      <PreviousIcon onPress={toPrevious} />
+      <TouchableOpacity onPress={toPrevious}>
+        <PreviousIcon />
+      </TouchableOpacity>
       {renderButton(state)}
-      <NextIcon onPress={toNext} />
+      <TouchableOpacity onPress={toNext}>
+        <NextIcon />
+      </TouchableOpacity>
     </Navigation>
   );
 };
